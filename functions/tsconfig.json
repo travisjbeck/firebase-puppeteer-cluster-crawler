@@ -5,11 +5,28 @@
     "noUnusedLocals": true,
     "outDir": "lib",
     "sourceMap": true,
+    "allowJs": true,
     "strict": true,
-    "target": "es2017"
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "target": "esnext",
+    "skipLibCheck": true,
+    "resolveJsonModule": true, // json imports
+    "esModuleInterop": true, // import common modules as ES6 Modules
+    "allowSyntheticDefaultImports": true, // support typesystem compatibility
+    "typeRoots": [
+      "./src/@types",
+      "./src/types"
+    ],
+    "moduleResolution": "node",
   },
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+  ],
+  "exclude": [
+    "node_modules",
+  ],
 }

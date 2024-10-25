@@ -1,0 +1,10 @@
+rules_version = '2';
+
+// Deny all client read and write operations to the storage bucket
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

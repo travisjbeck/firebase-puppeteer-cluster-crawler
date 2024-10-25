@@ -1,0 +1,59 @@
+{
+  "version": "2.0.0",
+  "presentation": {
+    "echo": false,
+    "reveal": "always",
+    "focus": false,
+    "panel": "dedicated",
+    "showReuseMessage": true
+  },
+  "tasks": [
+    {
+      "label": "Create terminals",
+      "dependsOn": [
+        "Kill Ports",
+        "TSC",
+        "Emulators",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "Kill Ports",
+      "type": "shell",
+      "command": "cd functions && npm run killports",
+    },
+    {
+      "label": "TSC",
+      "type": "shell",
+      "command": "cd functions && npm run build:watch",
+      "isBackground": true,
+      "problemMatcher": [],
+      "dependsOn": [
+        "Kill Ports"
+      ]
+    },
+    {
+      "label": "Emulators",
+      "type": "shell",
+      "command": "cd functions && npm run dev",
+      "isBackground": true,
+      "dependsOn": [
+        "Kill Ports"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+  ]
+}
