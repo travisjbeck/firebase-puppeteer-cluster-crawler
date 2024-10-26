@@ -28,11 +28,31 @@ We also add a post install step to `package.json` so that firebase can download 
 
 ## Setup
 
-You will need a firebase project to deploy to that has at minimum the following services enabled:
+You will need a Firebase project to deploy to that has at minimum the following services enabled:
 
 - Firestore
 - Cloud Functions
 
-For this project, I will assume you know the basics of setting up a firebase project and have the firebase CLI installed.
+For this project, I will assume you know the basics of setting up a firebase project and have the **latest** firebase CLI installed.
+
+### Install
+
+1. Clone the repository.
+2. Run `npm install` in the `functions` folder of the project.
+3. Run `firebase login` in the root directory to login to your firebase account.
+4. Run `firebase use your-project-id` in the root directory replacing 'your-project-id' with your Firebase Project ID. This will associate this code base with your firebase project.
+
+   - You can run `firebase projects:list` to get a list of your projects and their Project D.
+
+5. Run `firebase deploy` to deploy the project to Firebase or follow the instructions below to run locally.
+
+### Running Locally
+
+If you are using VSCode there is a launch configuration in `.vscode/tasks.json` that will automatically run the terminal commands needed to kill the functions emulator ports if they're still running, setup TSC build, and then start the emulator.
+
+If you are not using VSCode you can run the following commands in the `functions` directory:
+
+- run `npm run build:watch`.
+- then `npm run dev`.
 
 ## TO BE CONTINUED

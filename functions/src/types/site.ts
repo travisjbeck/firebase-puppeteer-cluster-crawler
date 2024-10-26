@@ -5,5 +5,4 @@ export type Site = {
   url: string;
   sitemapId?: string;
   sitemapError?: string;
-  status?: "processing" | "complete";
 }

@@ -1,9 +1,7 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { db, functions, isDevelopment } from "../init";
+import { db } from "../init";
 import { SITES_COLLECTION } from "../types/collections";
-import { processSitemap, SitemapProcessorProps } from "../tasks/sitemapProcessorTask";
 import { logger } from "firebase-functions/v2";
-import { getFunctionUrl } from "../utils/getFunctionUrl";
 import { FieldValue } from "firebase-admin/firestore";
 
 /*
@@ -11,7 +9,7 @@ This is another way to start the sitemap process running, by making an http requ
 
 NOTE THIS IS NOT A GOOD PRACTICE FOR PRODUCTION. This is just a way to trigger the sitemap process in development. In production, you should use the onSiteCreatedCrawlSite trigger to start the sitemap process.
 
-This function is triggered when a HTTP request is made to the endpoint /sitemapRequest?url=url. It will then queue a task to process the sitemap or process it immediately when running locally.
+This function is triggered when a HTTP request is made to the endpoint /sitemapRequest?url=url. It will create a new site document in the sites collection with the url provided in the query parameter. This will trigger the onSiteCreatedCrawlSite function to start the sitemap process.
 */
 export const createSitemap = onRequest({
   memory: "1GiB",
@@ -28,27 +26,9 @@ export const createSitemap = onRequest({
       const siteDoc = db.collection(SITES_COLLECTION).doc();
       await siteDoc.set({
         url,
-        createdAt: FieldValue.serverTimestamp(),
-        status: "processing",
+        createdAt: FieldValue.serverTimestamp()
       });
-      if (isDevelopment) {
-        logger.info("Running in development mode");
-        //if we are in development, process the sitemap immediately, there is no local Google Cloud Run Queue
-        await processSitemap(siteDoc.id);
-      } else {
-        //queue the sitemap processor task
-        const queue = functions.taskQueue("SitemapProcessor");
-        const targetUri = await getFunctionUrl("SitemapProcessor");
-
-        const data: SitemapProcessorProps = {
-          siteId: siteDoc.id,
-        }
-
-        await queue.enqueue(data, {
-          dispatchDeadlineSeconds: 60 * 10, // 10 minutes
-          uri: targetUri,
-        })
-      }
+      //onDocumentCreated will trigger the sitemap processing
     }
 
     res.status(200).send("Request is being processed");

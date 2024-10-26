@@ -34,13 +34,6 @@ export const onSiteCreatedCrawlSite = onDocumentCreated({
       throw new Error("Site url not found");
     }
 
-    //if the site is already processing, skip
-    //we flag this in our createSitemapRequest function by saving the sitemap with a status of "processing"
-    if (site.status) {
-      logger.info(`Site already processing, skipping sitemap creation for ${url}`);
-      return;
-    }
-
     const siteId = event.params.siteId;
 
     //make sure a sitemap doesn't already exist for this url
