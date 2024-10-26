@@ -11,10 +11,7 @@ NOTE THIS IS NOT A GOOD PRACTICE FOR PRODUCTION. This is just a way to trigger t
 
 This function is triggered when a HTTP request is made to the endpoint /sitemapRequest?url=url. It will create a new site document in the sites collection with the url provided in the query parameter. This will trigger the onSiteCreatedCrawlSite function to start the sitemap process.
 */
-export const createSitemap = onRequest({
-  memory: "1GiB",
-  timeoutSeconds: 540,
-}, async (req, res) => {
+export const createSitemap = onRequest(async (req, res) => {
   try {
     const { url } = req.query;
     if (!url) {

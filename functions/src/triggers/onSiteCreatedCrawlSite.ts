@@ -50,12 +50,6 @@ export const onSiteCreatedCrawlSite = onDocumentCreated({
       return;
     }
 
-    // if (isDevelopment) {
-    //   //if we are in development, process the sitemap immediately, there is no local Google Cloud Run Queue
-    //   await processSitemap(siteId);
-    //   return;
-    // }
-
     //queue the sitemap processor task
     const queue = functions.taskQueue("sitemapProcessorTask");
     const targetUri = await getFunctionUrl("sitemapProcessorTask");
