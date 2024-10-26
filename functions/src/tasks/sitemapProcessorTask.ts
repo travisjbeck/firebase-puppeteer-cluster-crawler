@@ -111,6 +111,7 @@ async function commitFinalChanges(
     lastUpdated: Timestamp.now(),
     pages,
     statusMessage: "Complete",
+    progress: 100,
     status: "complete",
   });
 
