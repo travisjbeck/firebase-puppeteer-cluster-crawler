@@ -2,7 +2,6 @@ import { parseStringPromise } from "xml2js";
 import { SiteMapItem } from "../types/sitemap";
 import { gunzipSync } from "zlib";
 import { logger } from "firebase-functions/v2";
-import removeDuplicateUrls from "./removeDuplicateUrls";
 import fetch from "node-fetch";
 
 
@@ -21,12 +20,16 @@ SiteMapItems: [
 It will also filter out duplicate URLs and only return the most recent MAX_CRAWL_LENGTH urls so as not to overload the page crawler.
 */
 
+
+
 // Constants
 const CRAWLER_NAME = "CrawlBot";
 const CRAWLER_URL = "https://www.mysite.com";
 const MAX_CRAWL_LENGTH = 300; //the maximum number of pages to crawl from a sitemap (sorted by updated), sites can have huge sitemaps
 const MAX_RETRY_ATTEMPTS = 3; //the maximum number of times to retry fetching a sitemap
 const RETRY_DELAY = 100; //the delay in milliseconds between retry attempts
+
+
 
 export const fetchSitemapUrls = async (url: string): Promise<SiteMapItem[] | null> => {
   const baseUrl = new URL(url).origin;
@@ -42,7 +45,7 @@ export const fetchSitemapUrls = async (url: string): Promise<SiteMapItem[] | nul
     }
 
     logger.info(`Found ${allUrls.length} total URLs`);
-    const uniqueUrls = removeDuplicateUrls(allUrls);
+    const uniqueUrls = [... new Set(allUrls)];
     logger.info(`Filtered to ${uniqueUrls.length} URLs`);
 
     //sort by lastmod so that the most recent pages are crawled first

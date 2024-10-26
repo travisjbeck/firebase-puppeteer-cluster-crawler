@@ -5,7 +5,7 @@ export type Sitemap = {
   createdAt: Timestamp;
   progress?: number;
   pages?: SiteMapItem[];
-  status: "new" | "processing" | "complete" | "error";
+  status: "new" | "processing" | "complete";
   statusMessage?: string;
   url: string;
   siteId: string;
