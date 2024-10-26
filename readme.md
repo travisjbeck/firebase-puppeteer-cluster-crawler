@@ -56,3 +56,25 @@ If you are not using VSCode you can run the following commands in the `functions
 - then `npm run dev`.
 
 ## How it Works
+
+A Google Cloud Task manages the heavy lifting of the crawling process. When a new document is created in the `sites` collection, an `onDocumentCreate` trigger fires, initiating a `processSiteMap` cloud task.
+
+The `processSiteMap` task then creates a new `sitemap` document, setting the `siteId` property to the related `site`. This `sitemap` document tracks the crawl, with `statusMessage` and `progress` properties updated as crawling advances.
+
+### Triggering a Crawl
+
+Creating a new document in the `sites` collection with at least a valid `url` property will trigger the process. You can monitor the `sitemap` document to check progress, while any errors are logged under `sitemapError` in the `site` document. Once the crawl completes, the `sitemapId` property is set to link the `sitemap` document.
+
+For testing, you can manually initiate the crawling process via the HTTP trigger `processSiteMap`, which creates a new `site` document using the `url` query parameter.
+
+Cloud Tasks are used because site crawling is a long-running process; Cloud Tasks allow up to 30 minutes of runtime compared to the 9-minute limit of Cloud Functions.
+
+## Tuning the Function Resources
+
+The cluster basically opens a bunch of 'tabs' simultaneously to crawl the site. As you can imagine this can use a lot of resources, so you may need to adjust the resources allocated to the function. I've tuned it a bit to the best of my ability, but you may need to adjust it further.
+
+## Note
+
+Be careful with adding too many concurrent workers to the puppeteer cluster, you may get rate limited by the website you are crawling or worst yet, get your IP banned. And then you gotta go do the whole rotating residential proxies thing, and ain't nobody got time for that.
+
+This project is a proof of concept and should not be used in production without further testing and tuning. It is not optimized for performance or cost. It is also not secure, as it does not handle authentication or authorization.
