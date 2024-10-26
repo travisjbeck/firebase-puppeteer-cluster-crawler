@@ -10,17 +10,14 @@
     "firestore": {
       "port": 8080
     },
-    "pubsub": {
-      "port": 8085
-    },
-    "storage": {
-      "port": 9199
-    },
-    "ui": {
-      "enabled": true
+    "tasks": {
+      "port": 9499
     },
     "functions": {
       "port": 5001
+    },
+    "ui": {
+      "enabled": true
     },
     "singleProjectMode": true
   },

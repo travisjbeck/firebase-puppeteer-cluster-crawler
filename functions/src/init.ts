@@ -24,3 +24,6 @@ export const db = getFirestore();
 export const storage = getStorage();
 export const functions = getFunctions();
 
+//Constants
+export const PROJECT_ID = "puppeteer-cluster";
+export const PROJECT_LOCATION = "us-central1";

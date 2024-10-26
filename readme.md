@@ -55,4 +55,4 @@ If you are not using VSCode you can run the following commands in the `functions
 - run `npm run build:watch`.
 - then `npm run dev`.
 
-## TO BE CONTINUED
+## How it Works

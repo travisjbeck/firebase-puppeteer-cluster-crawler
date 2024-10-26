@@ -2,9 +2,9 @@ import { DocumentSnapshot, FieldValue } from "firebase-admin/firestore";
 import { Site } from "../types/site";
 import { onDocumentCreated } from "firebase-functions/firestore";
 import { SITEMAPS_COLLECTION, SITES_COLLECTION } from "../types/collections";
-import { functions, db, isDevelopment } from "../init";
+import { functions, db } from "../init";
 import { logger } from "firebase-functions/v2";
-import { processSitemap, SitemapProcessorProps } from "../tasks/sitemapProcessorTask";
+import { SitemapProcessorProps } from "../tasks/sitemapProcessorTask";
 import { getFunctionUrl } from "../utils/getFunctionUrl";
 
 
@@ -50,15 +50,16 @@ export const onSiteCreatedCrawlSite = onDocumentCreated({
       return;
     }
 
-    if (isDevelopment) {
-      //if we are in development, process the sitemap immediately, there is no local Google Cloud Run Queue
-      await processSitemap(siteId);
-      return;
-    }
+    // if (isDevelopment) {
+    //   //if we are in development, process the sitemap immediately, there is no local Google Cloud Run Queue
+    //   await processSitemap(siteId);
+    //   return;
+    // }
 
     //queue the sitemap processor task
     const queue = functions.taskQueue("sitemapProcessorTask");
     const targetUri = await getFunctionUrl("sitemapProcessorTask");
+    logger.info(`Enqueuing sitemap processor task at ${targetUri}`);
 
     const data: SitemapProcessorProps = {
       siteId,
